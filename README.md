@@ -6,7 +6,7 @@
 <li><code>npm start</code></li>
 </ul>
 
-<h2>Run on mobile device with <a href="https://ngrok.com/" target="_blank">ngrok</a></h2>
+<h2>Debugging on mobile device with <a href="https://ngrok.com/" target="_blank">ngrok</a></h2>
 <ul>
 <li><code>npm install ngrok -g</code></li>
 <li><code>ngrok http 8081</code></li>
