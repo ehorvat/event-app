@@ -11,7 +11,7 @@
 <li><code>npm install ngrok -g</code></li>
 <li><code>ngrok http 8081</code></li>
 <li>Open event-app/ios/eventapp.xcodeproj in Xcode</li>
-<li>Open eventapp/AppDelegate.m</li>
+<li>Open event-app/ios/eventapp/AppDelegate.m</li>
 <li>Update <code>jsCodeLocation = [NSURL URLWithString:@"http://[YOUR NGROK FORWARDING URL]/index.ios.bundle?platform=ios&dev=true"];</code> <br>
 with your ngrok Forwarding address </li>
 <li>Clean & Run app in Xcode</li>
