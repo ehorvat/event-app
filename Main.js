@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, AsyncStorage } from 'react-native';
-import HomeScreen from './HomeScreen'
-import ScheduleScreen from './ScheduleScreen'
-import ViewContainer from './../components/ViewContainer'
-import StatusBarBackground from './../components/StatusBarBackground'
+import HomeScreen from './app/screens/HomeScreen'
+import ScheduleScreen from './app/screens/ScheduleScreen'
+import ViewContainer from './app/components/ViewContainer'
+import StatusBarBackground from './app/components/StatusBarBackground'
 import NavigationBar from 'react-native-navbar';
-import NavBarIcon from './../components/NavBarIcon'
-import NavBarTitle from './../components/NavBarTitle'
-import API from './../services/API'
-import Storage from './../services/Storage'
+import NavBarIcon from './app/components/NavBarIcon'
+import NavBarTitle from './app/components/NavBarTitle'
+import API from './app/services/API'
+import Storage from './app/services/Storage'
 
 const SideMenu = require('react-native-side-menu');
-const Menu = require('./../navigation/Menu');
+const Menu = require('./app/navigation/Menu');
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
