@@ -1,6 +1,7 @@
 package com.abcrn;
 
 import com.facebook.react.ReactActivity;
+import com.remobile.splashscreen.RCTSplashScreenPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.react.rnspinkit.RNSpinkitPackage;
 import com.react.rnspinkit.RNSpinkitPackage;
@@ -39,6 +40,7 @@ public class MainActivity extends ReactActivity {
     protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RCTSplashScreenPackage(),
             new VectorIconsPackage(),
             new RNSpinkitPackage(),
             new RNSpinkitPackage(),

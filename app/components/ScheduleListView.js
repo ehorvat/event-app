@@ -1,21 +1,45 @@
 import React, { Component } from 'react';
-import { AppRegistry, Navigator, StyleSheet, Text, View, ListView, AsyncStorage, TouchableOpacity } from 'react-native';
+import { AppRegistry, Navigator, StyleSheet, Text, View, ListView, AsyncStorage, TouchableOpacity, LayoutAnimation } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
+import Storage from './../services/Storage'
 
-class ScheduleListView extends Component {
+const ScheduleListView = React.createClass({
 
-
-  constructor(props) {
-    super(props)
+  getInitialState () {
     var ds = new ListView.DataSource({
       sectionHeaderHasChanged: (r1, r2) => r1 !== r2,
       rowHasChanged: (r1, r2) => r1 !== r2
     });
-    this.state = { dataSource: ds.cloneWithRowsAndSections(this.props.dataBlob.proposals, this.props.dataBlob.sections) }
-  }
+    console.log(this.props.screenData)
+    return {
+       dataSource: [],
+       listViewData: [],
+       loaded: false,
+       dataSource: ds.cloneWithRowsAndSections(this.props.screenData.proposals, this.props.screenData.sections)
+    }
+  },
+
+  componentDidMount() {
+    if(this.props.loadData) {
+      this.setState({
+        loaded: true
+      })
+    }
+  },
+
+  onEnter() {
+    if(!this.state.loaded) {
+      this.setState({
+        loaded: true
+      })
+    }
+  },
+
+  onLeave() {
+    console.log('leave: ' + this.props.i);
+  },
 
   _renderRow(rowData) {
-
 
     return (
       <TouchableOpacity style={styles.row}>
@@ -30,7 +54,7 @@ class ScheduleListView extends Component {
       </View>
       </TouchableOpacity>
     )
-  }
+  },
 
   _renderSectionHeader(data, sectionId) {
     return (
@@ -38,23 +62,25 @@ class ScheduleListView extends Component {
         <Text style={styles.sectionLabel}>{sectionId}</Text>
       </View>
     );
-  }
-
-
+  },
 
     render() {
-
+      if(!this.state.loaded) {
+        return (
+          <Text>Placeholder View</Text>
+        )
+      }
       return <ListView
         ref="listView"
         automaticallyAdjustContentInsets={false}
         dataSource={this.state.dataSource}
         renderRow={this._renderRow}
         renderSectionHeader={this._renderSectionHeader}
-        initialListSize={this.props.initialListSize}
+        initialListSize={3}
       />
 
     }
-}
+});
 
 var styles = StyleSheet.create({
 

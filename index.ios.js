@@ -1,5 +1,6 @@
-const React = require('react-native');
-const { AppRegistry, } = React;
-const Main = require('./Main');
+import React, { Component } from 'react';
+import { AppRegistry } from 'react-native';
+import AppNavigator from './app/navigation/AppNavigator'
+import Event from './Event.js'
 
-AppRegistry.registerComponent('eventapp', () => Main);
+AppRegistry.registerComponent('eventapp', () => Event);

@@ -56,6 +56,7 @@ const ScheduleTabBar = React.createClass({
   },
 });
 
+
 tabColor = (activeTab, i) => {
   if(activeTab == i) {
     return (

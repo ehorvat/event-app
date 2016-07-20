@@ -1,91 +1,76 @@
 //This import syntax is ES2015
 import React, { Component } from 'react';
-import { Navigator, StyleSheet, Text, View, ListView, AsyncStorage, TouchableOpacity, InteractionManager } from 'react-native';
-import Squares from '../components/Squares'
+import { Navigator, StyleSheet, Text, View, ListView, AsyncStorage, InteractionManager } from 'react-native';
 import ScheduleListView from './../components/ScheduleListView'
 import API from './../services/API'
 import Storage from './../services/Storage'
-import NavigationBar from 'react-native-navbar';
-import NavBarIcon from './../components/NavBarIcon'
-import NavBarTitle from './../components/NavBarTitle'
 import ScheduleTabBar from './../navigation/ScheduleTabBar'
-
 import ScrollableTabView, { ScrollableTabBar, } from 'react-native-scrollable-tab-view'
+import LoadingScreen from './LoadingScreen'
 
 var Spinner = require('react-native-spinkit')
 
-class ScheduleScreen extends Component {
+const ScheduleScreen = React.createClass({
 
-    constructor(props) {
-        super(props);
-        this.state = {
+    children: [],
+
+    getInitialState() {
+        return {
           loaded: false,
           page: 0,
-          conferenceDates:  [],
-          renderPlaceholderOnly: true,
           isVisible: true
         }
-    }
+    },
 
     componentDidMount() {
 
-      InteractionManager.runAfterInteractions(() => {
-
+    /*  InteractionManager.runAfterInteractions(() => {
               var conferenceDates = []
               var listViewData = []
 
-              //Fetch data from local storage for list view
-
-              Storage.getCache("scheduleListViewData").then((data) => {
-                listViewData = data
-              });
-
               Storage.getCache("conferenceDates").then((data) => {
-                conferenceDates = data
 
                 this.setState({
                   loaded: true,
                   isVisible: false,
-                  conferenceDates: conferenceDates,
-                  listViewData: listViewData,
-                  renderPlaceholderOnly: false
+                  conferenceDates: data,
                 })
-
               });
+            });
+          */
 
-      });
+    },
 
-    }
+    handleChangeTab({i, ref, from, }) {
+      this.children[i].onEnter();
+    },
 
     render() {
 
 
-      if (this.state.renderPlaceholderOnly) {
-        return (
-          <View style={styles.loadingContainer}>
-            <Spinner isVisible={this.state.isVisible} size={100} type={'Bounce'} color={"#008a96"}/>
-          </View>
-        )
-      }
 
+        console.log(this.props.screenData[0])
         return(
-            <View style={styles.container}>
             <ScrollableTabView
                   initialPage={this.state.page}
                   renderTabBar={() => <ScheduleTabBar />}
                   tabBarBackgroundColor="#eee"
                   tabBarUnderlineColor="#008a96"
                   tabBarActiveTextColor="#008a96"
-                  onChangeTab={this.onChange}
+                  onChangeTab={this.handleChangeTab}
                 >
-                {this.state.conferenceDates.map((date, i) => {
-                  return <ScheduleListView tabLabel={date} key={date} dataBlob={this.state.listViewData[i]} initialListSize={this.state.listViewData[i].proposals.length} />
+
+                {this.props.conferenceDates.map((date, i) => {
+                  var loadData = false
+                  if(this.state.page == i) {
+                    loadData = true
+                  }
+                    return <ScheduleListView ref={(ref) => this.children[i] = ref} tabLabel={date} key={date} i={i} loadData={loadData} screenData={this.props.screenData[i]} />
                 })}
                 </ScrollableTabView>
-            </View>
           );
     }
-}
+})
 
 
 var styles = StyleSheet.create({

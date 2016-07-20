@@ -1,130 +1,85 @@
-import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Text, View, ListView, TouchableOpacity } from 'react-native';
+'use strict'
+import HomeScreen from '../screens/HomeScreen'
+import ScheduleScreen from '../screens/ScheduleScreen'
 import StatusBarBackground from '../components/StatusBarBackground'
-import ViewContainer from '../components/ViewContainer'
-import Square from '../components/Square'
-import _ from 'lodash'
-import Icon from 'react-native-vector-icons/FontAwesome'
+
+import React, { Component } from 'react';
+import { StyleSheet, Text, View, Image, TouchableOpacity, AsyncStorage } from 'react-native';
+import NavigationBar from 'react-native-navbar';
+import NavBarIcon from '../components/NavBarIcon'
+import NavBarTitle from '../components/NavBarTitle'
+import API from './../services/API'
+import Storage from './../services/Storage'
+import LoadingScreen from './../screens/LoadingScreen'
+import Utils from './../Utils.js'
+
+const RNSideMenu = require('react-native-side-menu');
+const SideMenuContent = require('./../navigation/SideMenuContent');
+
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
 
 
-var SampleRow = React.createClass({
-  render() {
-    return (
-      <View>
-        <View>
-          <Text>{this.props.label}</Text>
-        </View>
-      </View>
-    );
-  }
-});
+module.exports = class SideMenu extends Component {
 
-
-class SideMenu extends React.Component {
 
   constructor(props) {
     super(props)
-    var ds = new ListView.DataSource({
-      sectionHeaderHasChanged: (r1, r2) => r1 !== r2,
-      rowHasChanged: (r1, r2) => r1 !== r2
+    this.state = {
+      isOpen: false,
+      showPlaceHolderView: false
+    };
+  }
+
+  updateMenuState(isOpen) {
+    this.setState({ isOpen, });
+  }
+
+  toggleMenu = () => {
+    this.setState({
+      isOpen: !this.state.isOpen,
     });
-
-   	var {dataBlob, sectionIds} = this.renderListViewData(this.props.navigationItems);
-
-    this.state = { navigationItems: ds.cloneWithRowsAndSections(dataBlob, sectionIds)}
   }
 
   render() {
+    const menu = <SideMenuContent toggleMenu={this.toggleMenu} changeScreen={this.props.changeScreen} />;
+
     return (
-        <View style={styles.drawerContainer}>
-          <View style={styles.navRow}>
-            <Icon name="home" style={styles.homeIcon} />
-            <Text>{this.props.eventTitle}</Text>
-          </View>
-          <ListView
-            ref="listView"
-            automaticallyAdjustContentInsets={false}
-            dataSource={this.state.navigationItems}
-            renderRow={this._renderRow}
-            renderSectionHeader={this.renderSectionHeader}
-          />
-        </View>
-        );
-  }
-
-
-  renderListViewData(navItems) {
-      var dataBlob = {};
-      var sectionIds = [];
-
-      navItems.map((item) => {
-        var section = item.section;
-        if (sectionIds.indexOf(section) === -1) {
-          sectionIds.push(section);
-          dataBlob[section] = [];
-        }
-        dataBlob[section].push(item);
-      });
-      return {dataBlob, sectionIds};
-    }
-
-  _renderRow(rowData) {
-    return (
-      <TouchableOpacity style={styles.navRow}>
-        <Square navigationItems={rowData} location="sidemenu" />
-        <Text style={styles.navLabel}>{rowData.label}</Text>
-      </TouchableOpacity>
-    )
-  }
-
-  renderSectionHeader(data, sectionId) {
-    var text;
-    return (
-      <View style={styles.navSection}>
-        <Text style={styles.navSectionLabel}>{sectionId}</Text>
-      </View>
+      <RNSideMenu
+        menu={menu}
+        isOpen={this.state.isOpen}
+        onChange={(isOpen) => this.updateMenuState(isOpen)}>
+        <StatusBarBackground />
+        <NavigationBar
+          title={<NavBarTitle navTitle={this.props.navTitle} />}
+          leftButton={<NavBarIcon iconName="bars" toggleMenu={this.toggleMenu} />}
+          tintColor="#008a96" />
+          {this.props.children}
+      </RNSideMenu>
     );
   }
+};
 
-}
-
-var styles = StyleSheet.create({
-
-    drawerContainer: {
-      flex: 1,
-      flexDirection: 'column',
-      marginRight: 20,
-      backgroundColor: '#D1F4FA',
-      width: 250,
-      marginTop: 20
-    },
-    navRow: {
-      flexDirection: "row",
-      justifyContent: "flex-start",
-      alignItems: "center",
-      height: 40
-    },
-    navLabel: {
-      marginLeft: 10
-    },
-    navSection: {
-      backgroundColor: "white",
-      flexDirection: "row",
-      justifyContent: "flex-start",
-      alignItems: "center",
-      height: 50
-    },
-    navSectionLabel: {
-      fontWeight: "bold",
-      marginLeft: 5
-    },
-    homeIcon: {
-      textAlign: 'center',
-      fontSize: 18,
-      marginLeft: 10,
-      marginRight: 12.
-    }
-
+const styles = StyleSheet.create({
+  button: {
+    position: 'absolute',
+    top: 20,
+    padding: 10,
+  },
+  caption: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    alignItems: 'center',
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
 });
-
-module.exports = SideMenu
